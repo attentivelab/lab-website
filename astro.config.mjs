@@ -1,2 +1,5 @@
 import { defineConfig } from 'astro/config';
-export default defineConfig({ site: 'https://www.theattentivebrain.com' });
+
+export default defineConfig({
+  site: 'https://www.theattentivebrain.com',
+});

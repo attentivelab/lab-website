@@ -40,6 +40,15 @@ def main():
     if unige.exists():
         (OUT / "logo-unige.webp").write_bytes(unige.read_bytes())
         print(f"{'Logo_UNIGE.webp':30} -> logo-unige.webp (copied)")
+    # publication PDFs: papers/ at repo root is the source of truth.
+    # Served at /pdfs/ (NOT /papers/): Astro's dev route guard 404s any
+    # browser navigation whose URL path shadows a file at the repo root,
+    # and papers/<name>.pdf exists there.
+    papers_out = ROOT / "public" / "pdfs"
+    papers_out.mkdir(parents=True, exist_ok=True)
+    for pdf in sorted((ROOT / "papers").glob("*.pdf")):
+        (papers_out / pdf.name).write_bytes(pdf.read_bytes())
+        print(f"{pdf.name:30} -> public/pdfs/ (copied)")
 
 
 if __name__ == "__main__":

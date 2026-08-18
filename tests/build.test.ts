@@ -17,7 +17,7 @@ describe('landing page', () => {
   });
 
   it('links the hero button to the publication PDF in a new tab', () => {
-    expect(home).toContain('/papers/Fiave_et_al_2026.pdf');
+    expect(home).toContain('/pdfs/Fiave_et_al_2026.pdf');
     expect(home).toMatch(/rel="noopener noreferrer"/);
   });
 
