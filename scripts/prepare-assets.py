@@ -20,6 +20,10 @@ def convert(src_name, stem, max_w, alpha):
         raise SystemExit(f"missing source image: {src}")
     im = Image.open(src)
     im = im.convert("RGBA" if alpha else "RGB")
+    if alpha:
+        bbox = im.getchannel("A").getbbox()
+        if bbox:
+            im = im.crop(bbox)  # trim transparent padding
     if im.width > max_w:
         h = round(im.height * max_w / im.width)
         im = im.resize((max_w, h), Image.LANCZOS)

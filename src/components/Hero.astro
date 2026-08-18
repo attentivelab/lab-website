@@ -22,7 +22,7 @@ const { slides } = Astro.props;
             )}
           </div>
           <figure class="hero__figure">
-            <img src={slide.image} alt={slide.credit ?? 'Research figure'} width="1448" height="1086" fetchpriority="high" decoding="async" />
+            <img src={slide.image} alt={slide.credit ?? 'Research figure'} width="1432" height="1017" fetchpriority="high" decoding="async" />
           </figure>
         </article>
       );
@@ -42,34 +42,27 @@ const { slides } = Astro.props;
 
 <style>
   .hero {
-    position: relative;
-    background: linear-gradient(165deg, var(--brand-tint) 0%, var(--brand-soft) 55%, #fff 100%);
-    padding-block: clamp(2.5rem, 6vw, 5rem) clamp(3rem, 7vw, 5.5rem);
-    overflow: hidden;
-  }
-  .hero::before {
-    content: ''; position: absolute; top: -22%; right: -12%;
-    width: 46vw; height: 46vw; border-radius: 50%;
-    background: radial-gradient(circle, color-mix(in srgb, var(--brand) 42%, transparent) 0%, transparent 70%);
-    pointer-events: none;
+    background: var(--paper);
+    padding-block: clamp(2rem, 5vw, 4rem) clamp(2.5rem, 6vw, 4.5rem);
   }
   .hero__grid { position: relative; display: grid; }
   .hero__slide {
     grid-area: 1 / 1;
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: clamp(2rem, 5vw, 4rem); align-items: center;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+    gap: clamp(1.5rem, 4vw, 3.5rem);
+    align-items: center;
     opacity: 0; visibility: hidden; transition: opacity 600ms var(--ease);
   }
   .hero__slide[aria-hidden='false'] { opacity: 1; visibility: visible; }
-  .hero__question { font-size: var(--text-hero); max-width: 17ch; }
-  .hero__cta { margin-top: clamp(1.5rem, 3vw, 2.25rem); }
-  .hero__figure {
-    margin: 0; padding: clamp(1rem, 2.5vw, 1.75rem);
-    background: color-mix(in srgb, #fff 72%, transparent);
-    border: 1px solid color-mix(in srgb, var(--brand) 38%, transparent);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow);
+  .hero__question {
+    font-size: var(--text-hero);
+    font-weight: 800;
+    max-width: 15ch;
   }
+  .hero__cta { margin-top: clamp(1.75rem, 3vw, 2.5rem); }
+  /* The figure is shown exactly as published — no frame, no card, no border. */
+  .hero__figure { margin: 0; }
   .hero__figure img { width: 100%; height: auto; }
   .hero__dots { display: flex; gap: 0.6rem; margin-top: 2rem; }
   .hero__dot { width: 38px; height: 4px; border: 0; padding: 0; cursor: pointer; border-radius: 2px; background: color-mix(in srgb, var(--brand-mid) 35%, transparent); transition: background var(--transition); }
@@ -77,7 +70,8 @@ const { slides } = Astro.props;
 
   @media (max-width: 900px) {
     .hero__slide { grid-template-columns: 1fr; gap: 2rem; }
-    .hero__question { max-width: 22ch; }
+    .hero__question { max-width: 20ch; }
+    .hero__figure { order: -1; }
   }
 </style>
 
