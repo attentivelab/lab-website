@@ -17,7 +17,7 @@ const home = (await getEntry('pages', 'home'))!.data;
   <Hero slides={slides} />
 
   <section class="section welcome">
-    <div class="wrap">
+    <div class="wrap welcome__inner">
       <Reveal>
         <h2 class="welcome__title">{home.welcomeTitle}</h2>
         {home.welcomeBody.map((p) => <p class="welcome__body">{p}</p>)}
@@ -72,8 +72,10 @@ const home = (await getEntry('pages', 'home'))!.data;
 </Base>
 
 <style>
-  .welcome__title { font-size: var(--text-xl); margin-bottom: 1.5rem; max-width: 24ch; }
-  .welcome__body { max-width: var(--measure); color: var(--ink-soft); font-size: var(--text-lg); line-height: 1.75; }
+  .welcome { padding-block: clamp(2.25rem, 5vw, 3.75rem); }
+  .welcome__inner { max-width: 780px; text-align: center; }
+  .welcome__title { font-size: clamp(1.4rem, 1.1rem + 1vw, 1.9rem); margin-bottom: 1.1rem; margin-inline: auto; }
+  .welcome__body { color: var(--ink-soft); font-size: var(--text-base); line-height: 1.7; margin-inline: auto; }
   .research-space { margin-top: 2.5rem; }
   .section-cta { margin-top: 2.75rem; }
 </style>
