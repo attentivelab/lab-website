@@ -1,0 +1,74 @@
+import { z } from 'astro/zod';
+
+export const ROLES = [
+  'Principal Investigator',
+  'Postdoctoral Researcher',
+  'PhD Student',
+  'Master Student',
+  'Research Assistant',
+] as const;
+export type Role = (typeof ROLES)[number];
+
+export const heroSchema = z.object({
+  question: z.string().min(1),
+  image: z.string().min(1),
+  credit: z.string().optional(),
+  buttonLabel: z.string().optional(),
+  buttonHref: z.string().optional(),
+  order: z.number(),
+});
+
+export const researchSchema = z.object({
+  title: z.string().min(1),
+  body: z.string().min(1),
+  order: z.number(),
+});
+
+export const personSchema = z.object({
+  name: z.string().min(1),
+  role: z.enum(ROLES),
+  photo: z.string().optional(),
+  bio: z.string().optional(),
+  email: z.string().optional(),
+  links: z.array(z.object({ label: z.string(), url: z.string() })).default([]),
+  order: z.number(),
+  alumni: z.boolean().default(false),
+});
+
+export const publicationSchema = z.object({
+  title: z.string().min(1),
+  authors: z.string().min(1),
+  year: z.number().int(),
+  journal: z.string().min(1),
+  doi: z.string().optional(),
+  pdf: z.string().optional(),
+  featured: z.boolean().default(false),
+});
+
+export const newsSchema = z.object({
+  title: z.string().min(1),
+  date: z.coerce.date(),
+  image: z.string().optional(),
+  body: z.string().min(1),
+  link: z.string().optional(),
+});
+
+export const homeSchema = z.object({
+  welcomeTitle: z.string().min(1),
+  welcomeBody: z.array(z.string()).min(1),
+  researchTitle: z.string().min(1),
+  researchCta: z.string().default('Explore our research'),
+  teamTitle: z.string().min(1),
+  teamBody: z.array(z.string()).min(1),
+  teamImage: z.string().min(1),
+  teamCta: z.string().default('Meet the lab'),
+  videoTitle: z.string().min(1),
+  videoId: z.string().min(1),
+});
+
+export type HeroSlide = z.infer<typeof heroSchema>;
+export type ResearchTopic = z.infer<typeof researchSchema>;
+export type Person = z.infer<typeof personSchema>;
+export type Publication = z.infer<typeof publicationSchema>;
+export type NewsItem = z.infer<typeof newsSchema>;
+export type HomeCopy = z.infer<typeof homeSchema>;
