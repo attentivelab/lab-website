@@ -12,8 +12,9 @@ const { slides } = Astro.props;
       return (
         <article class="hero__slide" data-slide={i} aria-hidden={i === 0 ? 'false' : 'true'}>
           <div class="hero__text">
-            {slide.credit && <p class="eyebrow">{slide.credit}</p>}
+            <p class="eyebrow">Research Highlights</p>
             <Heading class="hero__question">{slide.question}</Heading>
+            {slide.authors && <p class="hero__authors">{slide.authors}</p>}
             {slide.buttonLabel && slide.buttonHref && (
               <a class="btn btn--primary hero__cta" href={slide.buttonHref} target="_blank" rel="noopener noreferrer">
                 {slide.buttonLabel}
@@ -49,8 +50,8 @@ const { slides } = Astro.props;
   .hero__slide {
     grid-area: 1 / 1;
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
-    gap: clamp(1.5rem, 4vw, 3.5rem);
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.35fr);
+    gap: clamp(1.5rem, 4vw, 3rem);
     align-items: center;
     opacity: 0; visibility: hidden; transition: opacity 600ms var(--ease);
   }
@@ -58,9 +59,14 @@ const { slides } = Astro.props;
   .hero__question {
     font-size: var(--text-hero);
     font-weight: 800;
-    max-width: 15ch;
+    max-width: 20ch;
   }
-  .hero__cta { margin-top: clamp(1.75rem, 3vw, 2.5rem); }
+  .hero__authors {
+    margin-top: 1.4rem;
+    color: var(--ink-soft);
+    font-size: var(--text-base);
+  }
+  .hero__cta { margin-top: clamp(1.5rem, 2.5vw, 2rem); }
   /* The figure is shown exactly as published — no frame, no card, no border. */
   .hero__figure { margin: 0; }
   .hero__figure img { width: 100%; height: auto; }

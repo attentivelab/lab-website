@@ -39,18 +39,18 @@ const path = Astro.url.pathname;
     transition: box-shadow var(--transition), border-color var(--transition);
   }
   .nav.is-stuck { box-shadow: 0 1px 18px rgb(23 19 28 / 0.08); border-bottom-color: var(--rule); }
-  .nav__inner { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 76px; }
+  .nav__inner { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 92px; }
   .nav__brand { display: flex; align-items: center; gap: 0.7rem; text-decoration: none; }
-  .nav__brand img { width: 48px; height: auto; }
+  .nav__brand img { width: 66px; height: auto; }
   .nav__brand-text {
-    font-family: var(--font-display); font-size: 0.95rem; font-weight: 600;
-    line-height: 1.15; letter-spacing: -0.01em;
+    font-family: var(--font-display); font-size: 1.25rem; font-weight: 700;
+    line-height: 1.12; letter-spacing: -0.01em;
   }
   .nav__brand-text span { color: var(--brand-mid); }
   .nav__links { display: flex; gap: clamp(0.9rem, 1.9vw, 1.9rem); align-items: center; }
   .nav__links a {
-    position: relative; font-size: var(--text-sm); font-weight: 500;
-    text-decoration: none; color: var(--ink-soft); padding-block: 0.35rem;
+    position: relative; font-size: 1.125rem; font-weight: 700;
+    text-decoration: none; color: var(--ink); padding-block: 0.35rem;
     transition: color var(--transition);
   }
   .nav__links a::after {

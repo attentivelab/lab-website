@@ -13,6 +13,7 @@ export const heroSchema = z.object({
   question: z.string().min(1),
   image: z.string().min(1),
   credit: z.string().optional(),
+  authors: z.string().optional(),
   buttonLabel: z.string().optional(),
   buttonHref: z.string().optional(),
   order: z.number(),
