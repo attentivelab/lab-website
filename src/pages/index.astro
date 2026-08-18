@@ -1,0 +1,79 @@
+---
+import { getCollection, getEntry } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import ResearchGrid from '../components/ResearchGrid.astro';
+import SplitBlock from '../components/SplitBlock.astro';
+import VideoEmbed from '../components/VideoEmbed.astro';
+import Reveal from '../components/Reveal.astro';
+import { byOrder } from '../lib/collections';
+
+const slides = byOrder((await getCollection('hero')).map((e) => e.data));
+const topics = byOrder((await getCollection('research')).map((e) => e.data));
+const home = (await getEntry('pages', 'home'))!.data;
+---
+
+<Base title="Attentive Brains & Behaviors Lab — University of Geneva">
+  <Hero slides={slides} />
+
+  <section class="section welcome">
+    <div class="wrap">
+      <Reveal>
+        <h2 class="welcome__title">{home.welcomeTitle}</h2>
+        {home.welcomeBody.map((p) => <p class="welcome__body">{p}</p>)}
+      </Reveal>
+    </div>
+  </section>
+
+  <section class="section section--tint" id="research">
+    <div class="wrap">
+      <Reveal>
+        <p class="eyebrow">What we study</p>
+        <h2 class="section-title">{home.researchTitle}</h2>
+      </Reveal>
+      <div class="research-space">
+        <ResearchGrid topics={topics} />
+      </div>
+      <Reveal>
+        <p class="section-cta"><a class="btn btn--primary" href="/research">{home.researchCta}<span aria-hidden="true">&rarr;</span></a></p>
+      </Reveal>
+    </div>
+  </section>
+
+  <section class="section" id="team">
+    <div class="wrap">
+      <Reveal>
+        <SplitBlock
+          title={home.teamTitle}
+          image={home.teamImage}
+          imageAlt="The Attentive Brains & Behaviors Lab team"
+          imageWidth={1013}
+          imageHeight={1381}
+          ctaHref="/lab-members"
+          ctaLabel={home.teamCta}
+        >
+          {home.teamBody.map((p) => <p>{p}</p>)}
+        </SplitBlock>
+      </Reveal>
+    </div>
+  </section>
+
+  <section class="section section--brand" id="video">
+    <div class="wrap">
+      <Reveal>
+        <p class="eyebrow">Watch</p>
+        <h2 class="section-title">{home.videoTitle}</h2>
+      </Reveal>
+      <Reveal delay={80}>
+        <VideoEmbed videoId={home.videoId} title={home.videoTitle} />
+      </Reveal>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .welcome__title { font-size: var(--text-xl); margin-bottom: 1.5rem; max-width: 24ch; }
+  .welcome__body { max-width: var(--measure); color: var(--ink-soft); font-size: var(--text-lg); line-height: 1.75; }
+  .research-space { margin-top: 2.5rem; }
+  .section-cta { margin-top: 2.75rem; }
+</style>
