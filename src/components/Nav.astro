@@ -1,0 +1,91 @@
+---
+const links = [
+  { label: 'Research', href: '/research' },
+  { label: 'Lab members', href: '/lab-members' },
+  { label: 'Publications', href: '/publications' },
+  { label: 'News', href: '/news' },
+  { label: 'Collaborations', href: '/collaborations' },
+  { label: 'Contact', href: '/contact' },
+];
+const path = Astro.url.pathname;
+---
+
+<header class="nav" id="site-nav">
+  <div class="nav__inner wrap">
+    <a class="nav__brand" href="/" aria-label="Attentive Brains &amp; Behaviors Lab — home">
+      <img src="/images/logo.webp" alt="" width="320" height="283" />
+      <span class="nav__brand-text">Attentive Brains<br /><span>&amp; Behaviors</span></span>
+    </a>
+
+    <input type="checkbox" id="nav-toggle" class="nav__checkbox" />
+    <label for="nav-toggle" class="nav__burger" aria-label="Toggle navigation">
+      <span></span><span></span><span></span>
+    </label>
+
+    <nav class="nav__links" aria-label="Main">
+      {links.map((l) => (
+        <a href={l.href} aria-current={path === l.href ? 'page' : undefined}>{l.label}</a>
+      ))}
+    </nav>
+  </div>
+</header>
+
+<style>
+  .nav {
+    position: sticky; top: 0; z-index: 100;
+    background: color-mix(in srgb, var(--paper) 86%, transparent);
+    backdrop-filter: saturate(180%) blur(12px);
+    border-bottom: 1px solid transparent;
+    transition: box-shadow var(--transition), border-color var(--transition);
+  }
+  .nav.is-stuck { box-shadow: 0 1px 18px rgb(23 19 28 / 0.08); border-bottom-color: var(--rule); }
+  .nav__inner { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 76px; }
+  .nav__brand { display: flex; align-items: center; gap: 0.7rem; text-decoration: none; }
+  .nav__brand img { width: 48px; height: auto; }
+  .nav__brand-text {
+    font-family: var(--font-display); font-size: 0.95rem; font-weight: 600;
+    line-height: 1.15; letter-spacing: -0.01em;
+  }
+  .nav__brand-text span { color: var(--brand-mid); }
+  .nav__links { display: flex; gap: clamp(0.9rem, 1.9vw, 1.9rem); align-items: center; }
+  .nav__links a {
+    position: relative; font-size: var(--text-sm); font-weight: 500;
+    text-decoration: none; color: var(--ink-soft); padding-block: 0.35rem;
+    transition: color var(--transition);
+  }
+  .nav__links a::after {
+    content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 2px;
+    background: var(--brand); transform: scaleX(0); transform-origin: left;
+    transition: transform var(--transition);
+  }
+  .nav__links a:hover { color: var(--brand-deep); }
+  .nav__links a:hover::after, .nav__links a[aria-current='page']::after { transform: scaleX(1); }
+  .nav__links a[aria-current='page'] { color: var(--brand-deep); }
+  .nav__checkbox, .nav__burger { display: none; }
+
+  @media (max-width: 940px) {
+    .nav__burger {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 5px; width: 44px; height: 44px; cursor: pointer;
+    }
+    .nav__burger span { width: 22px; height: 2px; background: var(--ink); border-radius: 2px; }
+    .nav__links {
+      display: none; position: absolute; inset-inline: 0; top: 100%;
+      flex-direction: column; align-items: stretch; gap: 0;
+      background: var(--paper); border-bottom: 1px solid var(--rule);
+      padding: 0.25rem var(--gutter) 1.25rem; box-shadow: var(--shadow);
+    }
+    .nav__checkbox:checked ~ .nav__links { display: flex; }
+    .nav__links a { padding-block: 0.9rem; font-size: var(--text-base); border-bottom: 1px solid var(--rule); }
+    .nav__links a::after { display: none; }
+  }
+</style>
+
+<script>
+  const nav = document.getElementById('site-nav');
+  if (nav) {
+    const onScroll = () => nav.classList.toggle('is-stuck', window.scrollY > 8);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+  }
+</script>

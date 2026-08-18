@@ -1,0 +1,115 @@
+---
+import type { HeroSlide } from '../lib/schemas';
+interface Props { slides: HeroSlide[] }
+const { slides } = Astro.props;
+---
+
+<section class="hero" aria-roledescription="carousel" aria-label="Featured research question">
+  <div class="hero__grid wrap">
+    {slides.map((slide, i) => {
+      // Only the first slide carries the <h1> — one top-level heading per page.
+      const Heading = i === 0 ? 'h1' : 'p';
+      return (
+        <article class="hero__slide" data-slide={i} aria-hidden={i === 0 ? 'false' : 'true'}>
+          <div class="hero__text">
+            {slide.credit && <p class="eyebrow">{slide.credit}</p>}
+            <Heading class="hero__question">{slide.question}</Heading>
+            {slide.buttonLabel && slide.buttonHref && (
+              <a class="btn btn--primary hero__cta" href={slide.buttonHref} target="_blank" rel="noopener noreferrer">
+                {slide.buttonLabel}
+                <span aria-hidden="true">&rarr;</span>
+              </a>
+            )}
+          </div>
+          <figure class="hero__figure">
+            <img src={slide.image} alt={slide.credit ?? 'Research figure'} width="1448" height="1086" fetchpriority="high" decoding="async" />
+          </figure>
+        </article>
+      );
+    })}
+  </div>
+
+  {slides.length > 1 && (
+    <div class="hero__dots wrap" role="group" aria-label="Choose slide">
+      {slides.map((_, i) => (
+        <button class="hero__dot" data-dot={i} type="button"
+          aria-label={`Show question ${i + 1} of ${slides.length}`}
+          aria-current={i === 0 ? 'true' : 'false'}></button>
+      ))}
+    </div>
+  )}
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    background: linear-gradient(165deg, var(--brand-tint) 0%, var(--brand-soft) 55%, #fff 100%);
+    padding-block: clamp(2.5rem, 6vw, 5rem) clamp(3rem, 7vw, 5.5rem);
+    overflow: hidden;
+  }
+  .hero::before {
+    content: ''; position: absolute; top: -22%; right: -12%;
+    width: 46vw; height: 46vw; border-radius: 50%;
+    background: radial-gradient(circle, color-mix(in srgb, var(--brand) 42%, transparent) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero__grid { position: relative; display: grid; }
+  .hero__slide {
+    grid-area: 1 / 1;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: clamp(2rem, 5vw, 4rem); align-items: center;
+    opacity: 0; visibility: hidden; transition: opacity 600ms var(--ease);
+  }
+  .hero__slide[aria-hidden='false'] { opacity: 1; visibility: visible; }
+  .hero__question { font-size: var(--text-hero); max-width: 17ch; }
+  .hero__cta { margin-top: clamp(1.5rem, 3vw, 2.25rem); }
+  .hero__figure {
+    margin: 0; padding: clamp(1rem, 2.5vw, 1.75rem);
+    background: color-mix(in srgb, #fff 72%, transparent);
+    border: 1px solid color-mix(in srgb, var(--brand) 38%, transparent);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+  }
+  .hero__figure img { width: 100%; height: auto; }
+  .hero__dots { display: flex; gap: 0.6rem; margin-top: 2rem; }
+  .hero__dot { width: 38px; height: 4px; border: 0; padding: 0; cursor: pointer; border-radius: 2px; background: color-mix(in srgb, var(--brand-mid) 35%, transparent); transition: background var(--transition); }
+  .hero__dot[aria-current='true'] { background: var(--brand-deep); }
+
+  @media (max-width: 900px) {
+    .hero__slide { grid-template-columns: 1fr; gap: 2rem; }
+    .hero__question { max-width: 22ch; }
+  }
+</style>
+
+<script>
+  const root = document.querySelector('.hero');
+  if (root) {
+    const slides = [...root.querySelectorAll<HTMLElement>('[data-slide]')];
+    const dots = [...root.querySelectorAll<HTMLButtonElement>('[data-dot]')];
+    let index = 0;
+    let timer: number | undefined;
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const show = (next: number) => {
+      index = (next + slides.length) % slides.length;
+      slides.forEach((s, i) => s.setAttribute('aria-hidden', String(i !== index)));
+      dots.forEach((d, i) => d.setAttribute('aria-current', String(i === index)));
+    };
+    const stop = () => { if (timer) window.clearInterval(timer); timer = undefined; };
+    const start = () => {
+      if (reduced || slides.length < 2) return;
+      stop();
+      timer = window.setInterval(() => show(index + 1), 8000);
+    };
+
+    dots.forEach((d, i) => d.addEventListener('click', () => { show(i); start(); }));
+    root.addEventListener('keydown', (e) => {
+      const k = (e as KeyboardEvent).key;
+      if (k === 'ArrowRight') { show(index + 1); start(); }
+      if (k === 'ArrowLeft') { show(index - 1); start(); }
+    });
+    root.addEventListener('mouseenter', stop);
+    root.addEventListener('mouseleave', start);
+    start();
+  }
+</script>
