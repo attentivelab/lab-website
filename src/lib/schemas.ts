@@ -56,6 +56,7 @@ export const newsSchema = z.object({
 
 export const homeSchema = z.object({
   welcomeTitle: z.string().min(1),
+  welcomeHeadline: z.string().min(1),
   welcomeBody: z.array(z.string()).min(1),
   researchTitle: z.string().min(1),
   researchCta: z.string().default('Explore our research'),

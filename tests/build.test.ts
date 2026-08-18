@@ -23,7 +23,7 @@ describe('landing page', () => {
 
   it('shows the welcome heading and body', () => {
     expect(home).toContain('Welcome to the Attentive Brains &amp; Behaviors Lab');
-    expect(home).toContain('devastating consequences that brain diseases');
+    expect(home).toContain('devastating consequences of brain diseases');
   });
 
   it('renders all four research topics', () => {
