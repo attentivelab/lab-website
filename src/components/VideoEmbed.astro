@@ -21,7 +21,7 @@ const { videoId, title } = Astro.props;
 </div>
 
 <style>
-  .video { position: relative; aspect-ratio: 16 / 9; border-radius: var(--radius-lg); overflow: hidden; background: #000; box-shadow: var(--shadow-lift); }
+  .video { position: relative; aspect-ratio: 16 / 9; max-width: 760px; margin-inline: auto; border-radius: var(--radius-lg); overflow: hidden; background: #000; box-shadow: var(--shadow-lift); }
   .video__play { position: absolute; inset: 0; width: 100%; height: 100%; padding: 0; border: 0; background: none; cursor: pointer; }
   .video__poster { width: 100%; height: 100%; object-fit: cover; transition: transform 600ms var(--ease), opacity var(--transition); }
   .video__play:hover .video__poster { transform: scale(1.03); opacity: 0.88; }

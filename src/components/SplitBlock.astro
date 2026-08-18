@@ -22,9 +22,9 @@ const {
 </div>
 
 <style>
-  .split { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: clamp(2rem, 5vw, 4rem); align-items: center; }
+  .split { display: grid; grid-template-columns: 0.7fr 1.3fr; gap: clamp(2rem, 5vw, 4rem); align-items: center; }
   .split[data-reverse='true'] .split__media { order: 2; }
-  .split__media img { width: 100%; height: auto; border-radius: var(--radius-lg); box-shadow: var(--shadow); }
+  .split__media img { width: 100%; max-width: 380px; height: auto; border-radius: var(--radius-lg); box-shadow: var(--shadow); margin-inline: auto; }
   .split__title { font-size: var(--text-xl); margin-bottom: 1.1rem; }
   .split__body { max-width: var(--measure); color: var(--ink-soft); }
   .split__body :global(p + p) { margin-top: 1rem; }
