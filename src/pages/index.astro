@@ -98,7 +98,18 @@ const home = (await getEntry('pages', 'home'))!.data;
     margin-inline: auto;
   }
   .welcome__body { color: var(--ink-soft); font-size: var(--text-lg); line-height: 1.75; margin-inline: auto; }
-  .pcta { background: linear-gradient(160deg, var(--brand-tint) 0%, var(--brand-soft) 100%); }
+  .pcta { background: var(--paper); position: relative; }
+  /* short centred separator between team and participate */
+  .pcta::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(680px, calc(100% - 2 * var(--gutter)));
+    height: 1px;
+    background: var(--rule);
+  }
   .pcta__inner { max-width: 640px; text-align: center; }
   .pcta__title { font-size: var(--text-2xl); margin-bottom: 1rem; }
   .pcta__body { color: var(--ink-soft); margin-bottom: 1.75rem; }
