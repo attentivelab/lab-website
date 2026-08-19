@@ -10,6 +10,7 @@ OUT = ROOT / "public" / "images"
 JOBS = [
     ("Icon_lab.png", "logo", 320, True),
     ("Fiave et al., 2026.png", "hero-fiave-2026", 1600, True),
+    ("Sani_et_al_2021.png", "hero-sani-2021", 1600, True),
     ("Lab_Picture.jpg", "lab-team", 1200, False),
     # research area cards (flattened to RGB on white)
     ("Brain Injury & Attention.png", "research-injury", 900, False),
