@@ -37,6 +37,12 @@ describe('landing page', () => {
     }
   });
 
+  it('shows the participate call-to-action below the team section', () => {
+    expect(home).toContain('Take part in our studies');
+    expect(home.indexOf('id="team"')).toBeLessThan(home.indexOf('id="participate"'));
+    expect(home).toMatch(/href="\/participate"[^>]*>Discover our studies/);
+  });
+
   it('renders the team block and the lab photo', () => {
     expect(home).toContain('Our Team');
     expect(home).toContain('/images/lab-team.webp');

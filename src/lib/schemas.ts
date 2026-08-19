@@ -88,6 +88,9 @@ export const homeSchema = z.object({
   teamCta: z.string().default('Meet the lab'),
   videoTitle: z.string().min(1),
   videoId: z.string().min(1),
+  participateTitle: z.string().min(1),
+  participateBody: z.string().min(1),
+  participateCta: z.string().default('Take part in a study'),
 });
 
 export type HeroSlide = z.infer<typeof heroSchema>;

@@ -73,6 +73,8 @@ describe('homeSchema', () => {
       teamImage: '/images/lab-team.webp',
       videoTitle: 'Our lab',
       videoId: '3j5pefRbTuE',
+      participateTitle: 'Take part in our studies',
+      participateBody: 'Help us understand how attention works.',
     });
     expect(ok.success).toBe(true);
     expect(homeSchema.safeParse({ welcomeTitle: 'Welcome' }).success).toBe(false);
