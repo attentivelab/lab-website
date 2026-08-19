@@ -197,7 +197,18 @@ const CRITERIA = [
   .study__join:hover { color: var(--brand-deep); }
 
   /* Form */
-  .section--form { background: linear-gradient(160deg, var(--brand-tint) 0%, var(--brand-soft) 100%); }
+  .section--form { background: var(--paper); position: relative; }
+  /* short centred separator between the studies and the form */
+  .section--form::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(680px, calc(100% - 2 * var(--gutter)));
+    height: 1px;
+    background: var(--rule);
+  }
   .form-wrap { max-width: 620px; }
   .pform { display: grid; gap: 1.25rem; margin-top: 1.5rem; }
   .pform__field { display: grid; gap: 0.4rem; }
