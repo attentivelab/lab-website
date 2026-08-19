@@ -117,6 +117,22 @@ describe('participate page', () => {
   });
 });
 
+describe('research page', () => {
+  it('shows four alternating topic rows without explore links', () => {
+    const page = readFileSync('dist/research/index.html', 'utf8');
+    expect(page).toContain('How does the brain pay attention?');
+    expect(page.match(/class="rrow"/g) ?? []).toHaveLength(4);
+    expect(page).toContain('01 &middot; Brain Injury &amp; Attention');
+    expect(page).toContain('What happens when we lose the ability to pay attention to part of the world?');
+    expect(page).toContain('How do individual neurons create attention?');
+    for (const img of ['research-page-injury', 'research-page-networks', 'research-page-everyday', 'research-page-neurons']) {
+      expect(page).toContain(`/images/${img}.webp`);
+    }
+    expect(page).not.toContain('Explore this research');
+    expect(page).not.toContain('coming soon');
+  });
+});
+
 describe('navigation', () => {
   it('links all six destinations and they all build', () => {
     for (const href of ['/research', '/lab-members', '/publications', '/news', '/collaborations', '/participate']) {

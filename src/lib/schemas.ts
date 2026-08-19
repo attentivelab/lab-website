@@ -24,6 +24,11 @@ export const researchSchema = z.object({
   body: z.string().min(1),
   image: z.string().min(1),
   order: z.number(),
+  // Research page (full-width alternating rows)
+  label: z.string().optional(),
+  question: z.string().optional(),
+  detail: z.string().optional(),
+  pageImage: z.string().optional(),
 });
 
 export const personSchema = z.object({

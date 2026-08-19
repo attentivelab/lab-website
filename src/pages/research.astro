@@ -1,15 +1,84 @@
 ---
+import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
-const heading = 'Research';
+import Reveal from '../components/Reveal.astro';
+import { byOrder } from '../lib/collections';
+
+const topics = byOrder((await getCollection('research')).map((e) => e.data));
 ---
-<Base title={`${heading} — Attentive Brains & Behaviors Lab`}>
-  <section class="section">
+
+<Base title="Research — Attentive Brains & Behaviors Lab">
+  <section class="section rpage">
     <div class="wrap">
-      <h1 class="section-title">{heading}</h1>
-      <p style="color: var(--ink-soft); max-width: 60ch;">
-        This page is coming soon. In the meantime, see the research questions on the
-        <a href="/#research" style="color: var(--brand-deep); font-weight: 600;">home page</a>.
-      </p>
+      <Reveal>
+        <p class="eyebrow">Research</p>
+        <h1 class="rpage__title">How does the brain pay attention?</h1>
+        <p class="rpage__intro">
+          Our lab studies how the brain enables attention across multiple levels — from
+          large-scale networks and brain injury to everyday behavior and the activity of
+          single neurons.
+        </p>
+      </Reveal>
+
+      {topics.map((topic, i) => (
+        <Reveal>
+          <article class="rrow" data-reverse={i % 2 === 1 ? 'true' : 'false'}>
+            <img
+              class="rrow__img"
+              src={topic.pageImage ?? topic.image}
+              alt=""
+              width="1100"
+              height="700"
+              loading={i === 0 ? 'eager' : 'lazy'}
+              decoding="async"
+            />
+            <div class="rrow__text">
+              <p class="rrow__label">
+                {String(i + 1).padStart(2, '0')} &middot; {topic.label ?? topic.title}
+              </p>
+              <h2 class="rrow__question">{topic.question ?? topic.title}</h2>
+              <p class="rrow__detail">{topic.detail ?? topic.body}</p>
+            </div>
+          </article>
+        </Reveal>
+      ))}
     </div>
   </section>
 </Base>
+
+<style>
+  .rpage__title { font-size: var(--text-2xl); margin-bottom: 1rem; }
+  .rpage__intro { color: var(--ink-soft); max-width: 58ch; margin-bottom: clamp(2.5rem, 6vw, 4rem); }
+
+  .rrow {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(2rem, 5vw, 4.5rem);
+    align-items: center;
+    padding-block: clamp(1.75rem, 4vw, 3rem);
+    border-bottom: 1px solid var(--rule);
+  }
+  .rrow:last-of-type { border-bottom: 0; }
+  .rrow[data-reverse='true'] .rrow__img { order: 2; }
+  .rrow__img {
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius-lg);
+    background: #0b0812;
+  }
+  .rrow__label {
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--brand-mid);
+    margin-bottom: 0.8rem;
+  }
+  .rrow__question { font-size: var(--text-xl); margin-bottom: 0.9rem; max-width: 22ch; }
+  .rrow__detail { color: var(--ink-soft); max-width: 48ch; }
+
+  @media (max-width: 880px) {
+    .rrow { grid-template-columns: 1fr; gap: 1.5rem; }
+    .rrow[data-reverse='true'] .rrow__img { order: 0; }
+  }
+</style>
