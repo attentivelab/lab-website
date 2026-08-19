@@ -1,15 +1,202 @@
 ---
+import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
-const heading = 'Publications';
+import Reveal from '../components/Reveal.astro';
+import { byYear } from '../lib/collections';
+
+const pubs = (await getCollection('publications')).map((e) => e.data);
+const groups = byYear(pubs);
+
+// Featured: the newest publication flagged featured
+const featured = pubs
+  .filter((p) => p.featured)
+  .sort((a, b) => b.year - a.year)[0];
+
+// Tabs: All + the three most recent years; everything older under "Earlier"
+const years = groups.map((g) => g.year);
+const tabYears = years.slice(0, 3);
+const hasEarlier = years.length > 3;
 ---
-<Base title={`${heading} — Attentive Brains & Behaviors Lab`}>
-  <section class="section">
+
+<Base title="Publications — Attentive Brains & Behaviors Lab">
+  <section class="section pubs">
     <div class="wrap">
-      <h1 class="section-title">{heading}</h1>
-      <p style="color: var(--ink-soft); max-width: 60ch;">
-        This page is coming soon. In the meantime, see the research questions on the
-        <a href="/#research" style="color: var(--brand-deep); font-weight: 600;">home page</a>.
-      </p>
+      <Reveal>
+        <h1 class="pubs__title">Publications</h1>
+        <p class="pubs__sub">Explore our work on attention, brain networks,<br />spatial cognition, and behavior.</p>
+      </Reveal>
+
+      {featured && (
+        <Reveal>
+          <div class="featured">
+            <p class="pubs__label">Featured publication</p>
+            <div class="featured__grid">
+              {featured.image && (
+                <img class="featured__img" src={featured.image} alt="" width="1400" height="803" loading="eager" decoding="async" />
+              )}
+              <div class="featured__text">
+                <p class="featured__year">{featured.year}</p>
+                <h2 class="featured__heading">{featured.title}</h2>
+                <p class="featured__authors">{featured.authors}</p>
+                <p class="featured__journal">{featured.journal}</p>
+                {featured.pdf && (
+                  <a class="pub-link" href={featured.pdf} target="_blank" rel="noopener noreferrer">
+                    View publication <span aria-hidden="true">&rarr;</span>
+                  </a>
+                )}
+              </div>
+            </div>
+          </div>
+        </Reveal>
+      )}
+
+      <div class="all">
+        <Reveal>
+          <p class="pubs__label">All publications</p>
+          <nav class="tabs" aria-label="Filter by year">
+            <button class="tabs__tab" data-tab="all" aria-current="true" type="button">All</button>
+            {tabYears.map((y) => (
+              <button class="tabs__tab" data-tab={String(y)} aria-current="false" type="button">{y}</button>
+            ))}
+            {hasEarlier && <button class="tabs__tab" data-tab="earlier" aria-current="false" type="button">Earlier</button>}
+          </nav>
+        </Reveal>
+
+        {groups.map((group) => (
+          <div class="ygroup" data-year={String(group.year)} data-earlier={tabYears.includes(group.year) ? 'false' : 'true'}>
+            <h2 class="ygroup__year">{group.year}</h2>
+            <div class="ygroup__list">
+              {group.items.map((pub) => (
+                <article class="entry">
+                  <div class="entry__main">
+                    {pub.tags.length > 0 && (
+                      <p class="entry__tags">{pub.tags.join(' · ')}</p>
+                    )}
+                    <h3 class="entry__title">{pub.title}</h3>
+                    <p class="entry__authors">{pub.authors}</p>
+                    <p class="entry__journal">{pub.journal}</p>
+                  </div>
+                  {pub.pdf && (
+                    <a class="pub-link entry__link" href={pub.pdf} target="_blank" rel="noopener noreferrer">
+                      View publication <span aria-hidden="true">&rarr;</span>
+                    </a>
+                  )}
+                </article>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   </section>
 </Base>
+
+<style>
+  .pubs__title { font-size: var(--text-2xl); margin-bottom: 0.75rem; }
+  .pubs__sub { color: var(--ink-soft); margin-bottom: 3rem; }
+  .pubs__label {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--brand-mid);
+    margin-bottom: 1.5rem;
+  }
+
+  /* Featured block */
+  .featured { margin-bottom: clamp(3rem, 7vw, 5rem); }
+  .featured__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: center;
+  }
+  .featured__img { width: 100%; height: auto; border-radius: var(--radius-lg); }
+  .featured__year { color: var(--brand-mid); font-weight: 700; font-size: var(--text-sm); margin-bottom: 0.75rem; }
+  .featured__heading { font-size: var(--text-xl); margin-bottom: 1rem; }
+  .featured__authors { color: var(--ink-soft); margin-bottom: 0.75rem; }
+  .featured__journal { font-style: italic; color: var(--ink-faint); margin-bottom: 1.25rem; }
+
+  .pub-link {
+    font-size: var(--text-sm);
+    font-weight: 700;
+    color: var(--brand-mid);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .pub-link:hover { color: var(--brand-deep); }
+
+  /* Tabs */
+  .tabs { display: flex; gap: clamp(1.25rem, 3vw, 2.5rem); margin-bottom: 2.5rem; flex-wrap: wrap; }
+  .tabs__tab {
+    padding: 0 0 0.4rem;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    font-weight: 600;
+    color: var(--ink-soft);
+    border-bottom: 2px solid transparent;
+    transition: color var(--transition), border-color var(--transition);
+  }
+  .tabs__tab:hover { color: var(--brand-deep); }
+  .tabs__tab[aria-current='true'] { color: var(--ink); border-bottom-color: var(--brand-deep); }
+
+  /* Year groups */
+  .ygroup {
+    display: grid;
+    grid-template-columns: minmax(90px, 140px) 1fr;
+    gap: clamp(1.5rem, 4vw, 3.5rem);
+    margin-bottom: 1rem;
+  }
+  .ygroup[hidden] { display: none; }
+  .ygroup__year {
+    font-size: var(--text-2xl);
+    line-height: 1;
+  }
+  .entry {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: clamp(1.5rem, 4vw, 3rem);
+    align-items: center;
+    padding-block: 1.25rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .entry:last-child { border-bottom: 0; }
+  .entry__tags {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--brand-mid);
+    margin-bottom: 0.35rem;
+  }
+  .entry__title { font-size: var(--text-lg); margin-bottom: 0.35rem; max-width: 34rem; }
+  .entry__authors { color: var(--ink-soft); font-size: var(--text-sm); }
+  .entry__journal { font-style: italic; color: var(--ink-faint); font-size: var(--text-sm); }
+
+  @media (max-width: 880px) {
+    .featured__grid { grid-template-columns: 1fr; }
+    .ygroup { grid-template-columns: 1fr; gap: 0.75rem; }
+    .entry { grid-template-columns: 1fr; gap: 0.6rem; }
+  }
+</style>
+
+<script>
+  const tabs = [...document.querySelectorAll<HTMLButtonElement>('.tabs__tab')];
+  const groups = [...document.querySelectorAll<HTMLElement>('.ygroup')];
+  tabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      const key = tab.dataset.tab;
+      tabs.forEach((t) => t.setAttribute('aria-current', String(t === tab)));
+      groups.forEach((g) => {
+        const show =
+          key === 'all' ||
+          (key === 'earlier' ? g.dataset.earlier === 'true' : g.dataset.year === key);
+        g.hidden = !show;
+      });
+    });
+  });
+</script>

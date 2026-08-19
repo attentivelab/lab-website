@@ -83,6 +83,21 @@ describe('lab members page', () => {
   });
 });
 
+describe('publications page', () => {
+  it('shows the featured publication and all ten entries', () => {
+    const page = readFileSync('dist/publications/index.html', 'utf8');
+    expect(page).toContain('Featured publication');
+    expect(page).toContain('A ventro-temporal area supporting human allocentric representations');
+    expect(page).toContain('/images/featured-publication.webp');
+    expect(page.match(/class="entry"/g) ?? []).toHaveLength(10);
+    expect((page.match(/View publication/g) ?? []).length).toBeGreaterThanOrEqual(11);
+    expect(page).not.toMatch(/>PDF</);
+    for (const pdf of ['Fiave_et_al_2026', 'Song_et_al_2025pdf', 'Sani_et_al_2021', 'Sani_et_al_2013']) {
+      expect(page, `missing pdf link: ${pdf}`).toContain(`/pdfs/${pdf}.pdf`);
+    }
+  });
+});
+
 describe('navigation', () => {
   it('links all six destinations and they all build', () => {
     for (const href of ['/research', '/lab-members', '/publications', '/news', '/collaborations', '/contact']) {

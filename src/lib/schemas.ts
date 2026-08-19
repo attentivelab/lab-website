@@ -44,6 +44,8 @@ export const publicationSchema = z.object({
   journal: z.string().min(1),
   doi: z.string().optional(),
   pdf: z.string().optional(),
+  image: z.string().optional(),
+  tags: z.array(z.string()).default([]),
   featured: z.boolean().default(false),
 });
 

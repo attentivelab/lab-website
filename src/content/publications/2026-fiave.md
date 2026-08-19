@@ -1,8 +1,10 @@
 ---
-title: How does the brain direct attention to different parts of an object?
-authors: Fiave, P. A., et al.
+title: A ventro-temporal area supporting human allocentric representations
+authors: Fiave, P. A., Marin, G., Delavy, T., Briefer, A., Vuilleumier, P., & Sani, I.
 year: 2026
-journal: In press
+journal: Current Biology
 pdf: /pdfs/Fiave_et_al_2026.pdf
+image: /images/featured-publication.webp
+tags: [fMRI, Spatial cognition]
 featured: true
 ---
