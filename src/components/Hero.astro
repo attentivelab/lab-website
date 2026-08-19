@@ -138,13 +138,27 @@ const { slides } = Astro.props;
   .hero__arrow--prev { left: clamp(0.25rem, 1vw, 1rem); }
   .hero__arrow--next { right: clamp(0.25rem, 1vw, 1rem); }
   .hero__dots { display: flex; gap: 0.6rem; margin-top: 2rem; }
-  .hero__dot { width: 38px; height: 4px; border: 0; padding: 0; cursor: pointer; border-radius: 2px; background: color-mix(in srgb, var(--brand-mid) 35%, transparent); transition: background var(--transition); }
+  .hero__dot {
+    position: relative;
+    width: 38px;
+    height: 4px;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+    border-radius: 2px;
+    background: color-mix(in srgb, var(--brand-mid) 35%, transparent);
+    transition: background var(--transition);
+  }
+  /* invisible enlarged hit area: 44px tall tap target on a 4px visual bar */
+  .hero__dot::before { content: ''; position: absolute; inset: -20px -8px; }
   .hero__dot[aria-current='true'] { background: var(--brand-deep); }
 
   @media (max-width: 900px) {
     .hero__slide { grid-template-columns: 1fr; gap: 2rem; }
     .hero__question { max-width: 20ch; }
     .hero__figure { order: -1; }
+    /* phones navigate by swipe + dots; side arrows collide with the text */
+    .hero__arrow { display: none; }
   }
 </style>
 
@@ -196,6 +210,23 @@ const { slides } = Astro.props;
         start();
       });
     });
+    // Touch swipe: horizontal drags change slide; vertical scrolling is untouched.
+    let swipeX = 0;
+    let swipeY = 0;
+    root.addEventListener('touchstart', (e) => {
+      swipeX = e.touches[0].clientX;
+      swipeY = e.touches[0].clientY;
+    }, { passive: true });
+    root.addEventListener('touchend', (e) => {
+      const dx = e.changedTouches[0].clientX - swipeX;
+      const dy = e.changedTouches[0].clientY - swipeY;
+      if (Math.abs(dx) > 50 && Math.abs(dx) > 2 * Math.abs(dy)) {
+        const d = dx < 0 ? 1 : -1;
+        show(index + d, d);
+        start();
+      }
+    }, { passive: true });
+
     root.addEventListener('keydown', (e) => {
       const k = (e as KeyboardEvent).key;
       if (k === 'ArrowRight') { show(index + 1, 1); start(); }
