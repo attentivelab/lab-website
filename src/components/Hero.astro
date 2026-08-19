@@ -201,8 +201,6 @@ const { slides } = Astro.props;
       if (k === 'ArrowRight') { show(index + 1, 1); start(); }
       if (k === 'ArrowLeft') { show(index - 1, -1); start(); }
     });
-    root.addEventListener('mouseenter', stop);
-    root.addEventListener('mouseleave', start);
     start();
   }
 </script>
