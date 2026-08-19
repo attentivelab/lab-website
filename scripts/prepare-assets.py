@@ -59,12 +59,12 @@ MEMBERS = [
     ("Krys.heic", "krystina-wieczerzak"),
     ("Simona.heic", "simona-vaitekunaite"),
     ("Thibaud_Delavy.jpg", "thibaud-delavy"),
-    ("Tristan_Nukman.HEIC", "tristan-nukman"),
+    ("Tristan_Nukman.HEIC", "tristan-nukman", 90),  # EXIF orientation lost via PNG intermediate
     ("Carling.heic", "carling-massel"),
 ]
 
 
-def convert_member(src_name, slug):
+def convert_member(src_name, slug, rotate_cw=0):
     src = SRC / "lab_members" / src_name
     if not src.exists():
         raise SystemExit(f"missing member photo: {src}")
@@ -80,6 +80,8 @@ def convert_member(src_name, slug):
         tmp_path = None
         im = Image.open(src)
     im = im.convert("RGB")
+    if rotate_cw:
+        im = im.rotate(-rotate_cw, expand=True)
     if im.width > 1000:
         h = round(im.height * 1000 / im.width)
         im = im.resize((1000, h), Image.LANCZOS)
