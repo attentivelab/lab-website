@@ -27,17 +27,15 @@ const home = (await getEntry('pages', 'home'))!.data;
   </section>
 
   <section class="section" id="research">
-    <div class="wrap">
+    <div class="wrap research-layout">
       <Reveal>
-        <p class="eyebrow">What we study</p>
-        <h2 class="section-title">{home.researchTitle}</h2>
+        <div class="research-rail">
+          <p class="eyebrow">What we study</p>
+          <h2 class="research-rail__title">{home.researchTitle}</h2>
+          <a class="research-rail__link" href="/research">{home.researchCta} <span aria-hidden="true">&rarr;</span></a>
+        </div>
       </Reveal>
-      <div class="research-space">
-        <ResearchGrid topics={topics} />
-      </div>
-      <Reveal>
-        <p class="section-cta"><a class="btn btn--primary" href="/research">{home.researchCta}<span aria-hidden="true">&rarr;</span></a></p>
-      </Reveal>
+      <ResearchGrid topics={topics} />
     </div>
   </section>
 
@@ -89,6 +87,21 @@ const home = (await getEntry('pages', 'home'))!.data;
     margin-inline: auto;
   }
   .welcome__body { color: var(--ink-soft); font-size: var(--text-lg); line-height: 1.75; margin-inline: auto; }
-  .research-space { margin-top: 2.5rem; }
-  .section-cta { margin-top: 2.75rem; }
+  .research-layout {
+    display: grid;
+    grid-template-columns: minmax(170px, 220px) 1fr;
+    gap: clamp(1.75rem, 4vw, 3.5rem);
+    align-items: start;
+  }
+  .research-rail__title { font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2.1rem); margin-bottom: 1.4rem; }
+  .research-rail__link {
+    font-size: var(--text-sm);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--brand-mid);
+    text-decoration: none;
+  }
+  .research-rail__link:hover { color: var(--brand-deep); }
+  @media (max-width: 900px) { .research-layout { grid-template-columns: 1fr; } }
 </style>

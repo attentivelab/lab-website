@@ -23,13 +23,19 @@ describe('heroSchema', () => {
 });
 
 describe('researchSchema', () => {
-  it('accepts a question plus its answer', () => {
+  it('accepts a research area with title, body and image', () => {
     const r = researchSchema.safeParse({
-      title: 'What happens when we lose attention?',
-      body: 'We study stroke patients.',
+      title: 'Brain Injury & Attention',
+      body: 'How brain damage leads to deficits in attention.',
+      image: '/images/research-injury.webp',
       order: 1,
     });
     expect(r.success).toBe(true);
+  });
+
+  it('rejects a research area without an image', () => {
+    const r = researchSchema.safeParse({ title: 'X', body: 'Y', order: 1 });
+    expect(r.success).toBe(false);
   });
 });
 
@@ -59,6 +65,7 @@ describe('homeSchema', () => {
   it('requires the welcome block and the video URL', () => {
     const ok = homeSchema.safeParse({
       welcomeTitle: 'Welcome',
+      welcomeHeadline: 'A headline',
       welcomeBody: ['One.'],
       researchTitle: 'Research',
       teamTitle: 'Our Team',

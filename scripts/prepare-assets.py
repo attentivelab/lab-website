@@ -11,6 +11,11 @@ JOBS = [
     ("Icon_lab.png", "logo", 320, True),
     ("Fiave et al., 2026.png", "hero-fiave-2026", 1600, True),
     ("Lab_Picture.jpg", "lab-team", 1200, False),
+    # research area cards (flattened to RGB on white)
+    ("Brain Injury & Attention.png", "research-injury", 900, False),
+    ("Brain Network of Attention.png", "research-networks", 900, False),
+    ("Attention in Everyday Life.png", "research-everyday", 900, False),
+    ("Neuronal Mechanisms of Attention.png", "research-neurons", 900, False),
 ]
 
 
@@ -19,7 +24,17 @@ def convert(src_name, stem, max_w, alpha):
     if not src.exists():
         raise SystemExit(f"missing source image: {src}")
     im = Image.open(src)
-    im = im.convert("RGBA" if alpha else "RGB")
+    if alpha:
+        im = im.convert("RGBA")
+    else:
+        # flatten possible transparency onto white before dropping alpha
+        if im.mode in ("RGBA", "LA", "P"):
+            rgba = im.convert("RGBA")
+            base = Image.new("RGBA", rgba.size, (255, 255, 255, 255))
+            base.alpha_composite(rgba)
+            im = base.convert("RGB")
+        else:
+            im = im.convert("RGB")
     if alpha:
         bbox = im.getchannel("A").getbbox()
         if bbox:

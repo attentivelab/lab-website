@@ -26,10 +26,15 @@ describe('landing page', () => {
     expect(home).toContain('devastating consequences of brain diseases');
   });
 
-  it('renders all four research topics', () => {
+  it('renders all four research area cards with images', () => {
     expect(home.match(/class="rcard"/g) ?? []).toHaveLength(4);
-    expect(home).toContain('Virtual Reality');
-    expect(home).toContain('single neuron activity');
+    expect(home).toContain('Brain Injury &amp; Attention');
+    expect(home).toContain('Brain Networks of Attention');
+    expect(home).toContain('Attention in Everyday Life');
+    expect(home).toContain('Neuronal Mechanisms of Attention');
+    for (const img of ['research-injury', 'research-networks', 'research-everyday', 'research-neurons']) {
+      expect(home).toContain(`/images/${img}.webp`);
+    }
   });
 
   it('renders the team block and the lab photo', () => {
