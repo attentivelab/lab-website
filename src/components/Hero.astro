@@ -65,6 +65,7 @@ const { slides } = Astro.props;
     position: relative;
     background: var(--paper);
     padding-block: clamp(2rem, 5vw, 4rem) clamp(2.5rem, 6vw, 4.5rem);
+    overflow: hidden;
   }
   .hero__grid { position: relative; display: grid; }
   .hero__slide {
@@ -73,12 +74,32 @@ const { slides } = Astro.props;
     grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.35fr);
     gap: clamp(1.5rem, 4vw, 3rem);
     align-items: center;
-    opacity: 0; visibility: hidden; transition: opacity 600ms var(--ease);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(56px);
+    transition:
+      opacity 900ms var(--ease),
+      transform 900ms var(--ease),
+      visibility 0s linear 900ms;
   }
-  .hero__slide[aria-hidden='false'] { opacity: 1; visibility: visible; }
+  .hero__slide[aria-hidden='false'] {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    transition:
+      opacity 900ms var(--ease),
+      transform 900ms var(--ease),
+      visibility 0s;
+  }
   .hero__question {
+    /* Slides 2+ render as <p>, so the display-heading treatment is set
+       explicitly here — every slide must look identical to the first. */
+    font-family: var(--font-display);
     font-size: var(--text-hero);
     font-weight: 800;
+    line-height: 1.08;
+    letter-spacing: -0.022em;
+    text-wrap: balance;
     max-width: 20ch;
   }
   .hero__authors {
@@ -111,7 +132,7 @@ const { slides } = Astro.props;
     background: transparent;
     color: var(--brand-mid);
     cursor: pointer;
-    transition: color var(--transition), background var(--transition), transform var(--transition);
+    transition: color var(--transition), background var(--transition);
   }
   .hero__arrow:hover { color: var(--brand-deep); background: var(--brand-tint); }
   .hero__arrow--prev { left: clamp(0.25rem, 1vw, 1rem); }
@@ -135,30 +156,50 @@ const { slides } = Astro.props;
     let index = 0;
     let timer: number | undefined;
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const OFFSET = 56;
 
-    const show = (next: number) => {
-      index = (next + slides.length) % slides.length;
-      slides.forEach((s, i) => s.setAttribute('aria-hidden', String(i !== index)));
-      dots.forEach((d, i) => d.setAttribute('aria-current', String(i === index)));
+    // Direction-aware slide: the incoming slide enters from the travel
+    // direction, the outgoing one exits to the opposite side, both fading.
+    const show = (next: number, dir?: number) => {
+      const target = (next + slides.length) % slides.length;
+      if (target === index) return;
+      const d = dir ?? (target > index ? 1 : -1);
+      const outgoing = slides[index];
+      const incoming = slides[target];
+      index = target;
+
+      outgoing.style.transform = `translateX(${-d * OFFSET}px)`;
+      outgoing.setAttribute('aria-hidden', 'true');
+
+      incoming.style.transition = 'none';
+      incoming.style.transform = `translateX(${d * OFFSET}px)`;
+      void incoming.offsetWidth; // apply the start position before animating
+      incoming.style.transition = '';
+      incoming.style.transform = '';
+      incoming.setAttribute('aria-hidden', 'false');
+
+      dots.forEach((dot, i) => dot.setAttribute('aria-current', String(i === index)));
     };
+
     const stop = () => { if (timer) window.clearInterval(timer); timer = undefined; };
     const start = () => {
       if (reduced || slides.length < 2) return;
       stop();
-      timer = window.setInterval(() => show(index + 1), 15000);
+      timer = window.setInterval(() => show(index + 1, 1), 10000);
     };
 
-    dots.forEach((d, i) => d.addEventListener('click', () => { show(i); start(); }));
+    dots.forEach((dot, i) => dot.addEventListener('click', () => { show(i); start(); }));
     root.querySelectorAll<HTMLButtonElement>('[data-nav]').forEach((btn) => {
       btn.addEventListener('click', () => {
-        show(index + (btn.dataset.nav === 'next' ? 1 : -1));
+        const d = btn.dataset.nav === 'next' ? 1 : -1;
+        show(index + d, d);
         start();
       });
     });
     root.addEventListener('keydown', (e) => {
       const k = (e as KeyboardEvent).key;
-      if (k === 'ArrowRight') { show(index + 1); start(); }
-      if (k === 'ArrowLeft') { show(index - 1); start(); }
+      if (k === 'ArrowRight') { show(index + 1, 1); start(); }
+      if (k === 'ArrowLeft') { show(index - 1, -1); start(); }
     });
     root.addEventListener('mouseenter', stop);
     root.addEventListener('mouseleave', start);
