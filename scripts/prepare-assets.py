@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 """Convert source images in pictures/ to web-ready WebP in public/images/."""
+import subprocess
+import tempfile
 from pathlib import Path
 from PIL import Image
 
@@ -48,10 +50,52 @@ def convert(src_name, stem, max_w, alpha):
     print(f"{src_name:30} -> {dest.name:22} {im.width}x{im.height}  {dest.stat().st_size/1024:6.1f} KB")
 
 
+# Lab member portraits: pictures/lab_members/<file> -> public/images/people-<slug>.webp
+# HEIC sources are converted via macOS `sips` (lossless PNG intermediate), then
+# encoded to WebP at quality 95 to preserve photographic detail.
+MEMBERS = [
+    ("Ilaria_Sani.jpeg", "ilaria-sani"),
+    ("Prosper_Fiave.heic", "prosper-fiave"),
+    ("Krys.heic", "krystina-wieczerzak"),
+    ("Simona.heic", "simona-vaitekunaite"),
+    ("Thibaud_Delavy.jpg", "thibaud-delavy"),
+    ("Tristan_Nukman.HEIC", "tristan-nukman"),
+    ("Carling.heic", "carling-massel"),
+]
+
+
+def convert_member(src_name, slug):
+    src = SRC / "lab_members" / src_name
+    if not src.exists():
+        raise SystemExit(f"missing member photo: {src}")
+    if src.suffix.lower() == ".heic":
+        with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmp:
+            tmp_path = Path(tmp.name)
+        subprocess.run(
+            ["sips", "-s", "format", "png", str(src), "--out", str(tmp_path)],
+            check=True, capture_output=True,
+        )
+        im = Image.open(tmp_path)
+    else:
+        tmp_path = None
+        im = Image.open(src)
+    im = im.convert("RGB")
+    if im.width > 1000:
+        h = round(im.height * 1000 / im.width)
+        im = im.resize((1000, h), Image.LANCZOS)
+    dest = OUT / f"people-{slug}.webp"
+    im.save(dest, "WEBP", quality=95, method=6)
+    if tmp_path:
+        tmp_path.unlink(missing_ok=True)
+    print(f"{src_name:30} -> {dest.name:34} {im.width}x{im.height}  {dest.stat().st_size/1024:6.1f} KB")
+
+
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
     for job in JOBS:
         convert(*job)
+    for member in MEMBERS:
+        convert_member(*member)
     unige = SRC / "Logo_UNIGE.webp"
     if unige.exists():
         (OUT / "logo-unige.webp").write_bytes(unige.read_bytes())

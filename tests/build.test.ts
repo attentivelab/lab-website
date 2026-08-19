@@ -68,6 +68,21 @@ describe('landing page', () => {
   });
 });
 
+describe('lab members page', () => {
+  it('features the PI and groups members by role', () => {
+    const page = readFileSync('dist/lab-members/index.html', 'utf8');
+    expect(page).toContain('Ilaria Sani');
+    expect(page).toContain('Postdoctoral Researchers');
+    expect(page).toContain('PhD Students');
+    expect(page).toContain('Master&#39;s Students');
+    for (const name of ['Prosper Fiave', 'Krystina Wieczerzak', 'Simona Vaitekunaite', 'Thibaud Delavy', 'Tristan Nukman', 'Carling Massel']) {
+      expect(page, `missing member: ${name}`).toContain(name);
+    }
+    expect(page.match(/class="person"/g) ?? []).toHaveLength(7);
+    expect(page).not.toContain('Alumni');
+  });
+});
+
 describe('navigation', () => {
   it('links all six destinations and they all build', () => {
     for (const href of ['/research', '/lab-members', '/publications', '/news', '/collaborations', '/contact']) {

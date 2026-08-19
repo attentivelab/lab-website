@@ -1,0 +1,52 @@
+---
+import type { Person } from '../lib/schemas';
+interface Props { person: Person }
+const { person } = Astro.props;
+---
+
+<article class="person">
+  {person.photo
+    ? <img class="person__photo" src={person.photo} alt={person.name} width="800" height="1000" loading="lazy" decoding="async" />
+    : <div class="person__photo person__photo--empty" aria-hidden="true"></div>}
+  <h3 class="person__name">{person.name}</h3>
+  <p class="person__role">{person.role}</p>
+  {person.bio && <p class="person__bio">{person.bio}</p>}
+  {person.email && <a class="person__email" href={`mailto:${person.email}`}>{person.email}</a>}
+</article>
+
+<style>
+  .person { text-align: center; }
+  .person__photo {
+    width: 100%;
+    max-width: 340px;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    border-radius: var(--radius);
+    margin-inline: auto;
+    margin-bottom: 1.1rem;
+    box-shadow: var(--shadow);
+  }
+  .person__photo--empty { background: var(--brand-tint); border: 1px solid var(--rule); }
+  .person__name { font-size: var(--text-lg); margin-bottom: 0.2rem; }
+  .person__role {
+    color: var(--brand-mid);
+    font-size: var(--text-sm);
+    font-weight: 700;
+    margin-bottom: 0.55rem;
+  }
+  .person__bio {
+    color: var(--ink-soft);
+    font-size: var(--text-sm);
+    line-height: 1.6;
+    max-width: 34ch;
+    margin-inline: auto;
+  }
+  .person__email {
+    display: inline-block;
+    margin-top: 0.5rem;
+    font-size: var(--text-sm);
+    color: var(--brand-deep);
+    text-decoration: none;
+  }
+  .person__email:hover { text-decoration: underline; text-underline-offset: 3px; }
+</style>

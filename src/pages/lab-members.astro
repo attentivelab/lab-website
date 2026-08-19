@@ -1,15 +1,93 @@
 ---
+import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
-const heading = 'Lab members';
+import PersonCard from '../components/PersonCard.astro';
+import Reveal from '../components/Reveal.astro';
+import { groupPeople, alumniOf } from '../lib/collections';
+
+const all = (await getCollection('people')).map((e) => e.data);
+const groups = groupPeople(all);
+const alumni = alumniOf(all);
+
+const pi = groups.find((g) => g.role === 'Principal Investigator')?.members[0];
+const teams = groups.filter((g) => g.role !== 'Principal Investigator');
+
+const GROUP_LABELS: Record<string, string> = {
+  'Postdoctoral Researcher': 'Postdoctoral Researchers',
+  'PhD Student': 'PhD Students',
+  'Master Student': "Master's Students",
+  'Research Assistant': 'Research Assistants',
+};
 ---
-<Base title={`${heading} — Attentive Brains & Behaviors Lab`}>
-  <section class="section">
+
+<Base title="Lab members — Attentive Brains & Behaviors Lab">
+  <section class="section members">
     <div class="wrap">
-      <h1 class="section-title">{heading}</h1>
-      <p style="color: var(--ink-soft); max-width: 60ch;">
-        This page is coming soon. In the meantime, see the research questions on the
-        <a href="/#research" style="color: var(--brand-deep); font-weight: 600;">home page</a>.
-      </p>
+      <Reveal>
+        <h1 class="members__title">Lab members</h1>
+        <p class="members__sub">Meet the people behind<br />Attentive Brains &amp; Behaviors.</p>
+      </Reveal>
+
+      {pi && (
+        <Reveal>
+          <div class="members__pi">
+            <PersonCard person={pi} />
+          </div>
+        </Reveal>
+      )}
+
+      {teams.map((group) => (
+        <div class="members__group">
+          <Reveal>
+            <h2 class="members__label">{GROUP_LABELS[group.role] ?? group.role}</h2>
+          </Reveal>
+          <div class="members__grid" data-count={group.members.length}>
+            {group.members.map((person, i) => (
+              <Reveal delay={i * 90}>
+                <PersonCard person={person} />
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      ))}
+
+      {alumni.length > 0 && (
+        <div class="members__group">
+          <Reveal>
+            <h2 class="members__label">Alumni</h2>
+          </Reveal>
+          <ul class="members__alumni">
+            {alumni.map((person) => <li>{person.name}</li>)}
+          </ul>
+        </div>
+      )}
     </div>
   </section>
 </Base>
+
+<style>
+  .members__title { font-size: var(--text-2xl); margin-bottom: 0.75rem; }
+  .members__sub { color: var(--ink-soft); margin-bottom: 3rem; }
+  .members__pi { max-width: 340px; margin-inline: auto; margin-bottom: 3.5rem; }
+  .members__group { margin-bottom: 3.5rem; }
+  .members__label {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--brand-mid);
+    margin-bottom: 1.75rem;
+  }
+  .members__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 340px));
+    justify-content: center;
+    gap: clamp(1.75rem, 4vw, 3rem);
+  }
+  .members__alumni { list-style: none; padding: 0; columns: 2; color: var(--ink-soft); }
+  @media (max-width: 560px) {
+    .members__grid { grid-template-columns: 1fr; }
+    .members__alumni { columns: 1; }
+  }
+</style>
