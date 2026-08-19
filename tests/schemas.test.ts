@@ -26,7 +26,7 @@ describe('researchSchema', () => {
   it('accepts a research area with title, body and image', () => {
     const r = researchSchema.safeParse({
       title: 'Brain Injury & Attention',
-      body: 'How brain damage leads to deficits in attention.',
+      blurb: 'How brain damage leads to deficits in attention.',
       image: '/images/research-injury.webp',
       order: 1,
     });
@@ -34,7 +34,7 @@ describe('researchSchema', () => {
   });
 
   it('rejects a research area without an image', () => {
-    const r = researchSchema.safeParse({ title: 'X', body: 'Y', order: 1 });
+    const r = researchSchema.safeParse({ title: 'X', blurb: 'Y', order: 1 });
     expect(r.success).toBe(false);
   });
 });

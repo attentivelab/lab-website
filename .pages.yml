@@ -1,0 +1,228 @@
+# Pages CMS configuration — https://pagescms.org/docs
+# This file defines the editing forms shown at https://app.pagescms.org
+# after logging in with the lab GitHub account. Field names MUST match
+# the Zod schemas in src/lib/schemas.ts (guarded by tests/cms-config.test.ts).
+
+media:
+  - name: images
+    label: Images
+    input: public/images
+    output: /images
+    extensions: [webp, png, jpg, jpeg, svg]
+  - name: pdfs
+    label: Paper PDFs
+    input: public/pdfs
+    output: /pdfs
+    extensions: [pdf]
+
+content:
+  - name: publications
+    label: Publications
+    type: collection
+    path: src/content/publications
+    view:
+      fields: [title, year, journal, featured]
+      sort: [year, title]
+      default:
+        sort: year
+        order: desc
+    fields:
+      - { name: title, label: Title, type: string, required: true }
+      - name: authors
+        label: Authors
+        type: string
+        required: true
+        description: 'As they should appear on the site, e.g. "Fiave, P. A., Marin, G., & Sani, I."'
+      - { name: year, label: Year, type: number, required: true }
+      - { name: journal, label: Journal, type: string, required: true }
+      - { name: doi, label: DOI (optional), type: string, description: 'Numbers only, e.g. 10.1016/j.cub.2026.06.060' }
+      - name: pdf
+        label: PDF of the paper
+        type: file
+        options: { media: pdfs }
+      - name: image
+        label: Image (only needed for the featured paper)
+        type: image
+        options: { media: images }
+      - name: tags
+        label: Topic tags
+        type: string
+        list: true
+        description: 'Short topics shown above the title, e.g. "fMRI", "Spatial cognition"'
+      - { name: featured, label: Feature on the Publications page, type: boolean, default: false }
+
+  - name: hero
+    label: Homepage highlights (carousel)
+    type: collection
+    path: src/content/hero
+    view:
+      fields: [question, credit, order]
+      sort: [order]
+    fields:
+      - name: question
+        label: Research question
+        type: string
+        required: true
+        description: 'Shown big on the homepage. 10–20 words, phrased as a question.'
+      - name: image
+        label: Figure from the paper
+        type: image
+        required: true
+        options: { media: images }
+      - { name: credit, label: Credit, type: string, description: 'e.g. "Fiave et al., 2026"' }
+      - { name: authors, label: Full author list, type: string }
+      - { name: buttonLabel, label: Button text, type: string, default: View our publication }
+      - name: buttonHref
+        label: Button link
+        type: string
+        description: 'Usually the PDF, e.g. /pdfs/Fiave_et_al_2026.pdf — upload the PDF under Publications first.'
+      - { name: order, label: Slide order, type: number, required: true, default: 1 }
+
+  - name: people
+    label: Lab members
+    type: collection
+    path: src/content/people
+    view:
+      fields: [name, role, alumni]
+      sort: [order]
+    fields:
+      - { name: name, label: Full name, type: string, required: true }
+      - name: role
+        label: Role
+        type: select
+        required: true
+        options:
+          values:
+            - Principal Investigator
+            - Postdoctoral Researcher
+            - PhD Student
+            - Master Student
+            - Research Assistant
+      - name: photo
+        label: Photo
+        type: image
+        options: { media: images }
+        description: 'Portrait orientation looks best (it is displayed 4:5).'
+      - { name: bio, label: Short line under the name (optional), type: string }
+      - { name: email, label: Email (optional), type: string }
+      - name: links
+        label: Links (optional)
+        type: object
+        list: true
+        fields:
+          - { name: label, label: Label, type: string }
+          - { name: url, label: URL, type: string }
+      - { name: order, label: Display order within the role, type: number, required: true, default: 1 }
+      - { name: alumni, label: Former member (moves to Alumni), type: boolean, default: false }
+
+  - name: research
+    label: Research topics
+    type: collection
+    path: src/content/research
+    view:
+      fields: [title, order]
+      sort: [order]
+    fields:
+      - { name: title, label: Short title (homepage card), type: string, required: true }
+      - { name: blurb, label: One-line description (homepage card), type: string, required: true }
+      - name: image
+        label: Card image (homepage)
+        type: image
+        required: true
+        options: { media: images }
+      - { name: label, label: Label on the Research page, type: string, description: 'e.g. "Brain Injury & Attention"' }
+      - { name: question, label: Question headline (Research page), type: string }
+      - { name: detail, label: Description (Research page), type: string }
+      - name: pageImage
+        label: Large image (Research page)
+        type: image
+        options: { media: images }
+      - { name: order, label: Order, type: number, required: true, default: 1 }
+
+  - name: studies
+    label: Studies (Participate page)
+    type: collection
+    path: src/content/studies
+    view:
+      fields: [title, tag, order]
+      sort: [order]
+    fields:
+      - { name: title, label: Study title, type: string, required: true }
+      - { name: tag, label: Tag line, type: string, required: true, description: 'e.g. "Healthy volunteers · fMRI"' }
+      - { name: description, label: Short description, type: string, required: true }
+      - name: image
+        label: Study image
+        type: image
+        required: true
+        options: { media: images }
+      - { name: age, label: Age range, type: string, required: true, default: 18–65 years }
+      - { name: duration, label: Duration, type: string, required: true, description: 'e.g. "~2 hours"' }
+      - { name: location, label: Location, type: string, required: true, default: Campus Biotech }
+      - { name: compensated, label: Compensated, type: boolean, default: true }
+      - { name: order, label: Order, type: number, required: true, default: 1 }
+
+  - name: collaborators
+    label: Collaborators
+    type: collection
+    path: src/content/collaborators
+    view:
+      fields: [name, affiliation, order]
+      sort: [order]
+    fields:
+      - { name: name, label: Full name, type: string, required: true }
+      - { name: affiliation, label: Institution, type: string, required: true }
+      - name: photo
+        label: Photo
+        type: image
+        required: true
+        options: { media: images }
+      - { name: link, label: Website (optional), type: string }
+      - { name: order, label: Order, type: number, required: true, default: 1 }
+
+  - name: news
+    label: News
+    type: collection
+    path: src/content/news
+    view:
+      fields: [title, date]
+      sort: [date]
+      default:
+        sort: date
+        order: desc
+    fields:
+      - { name: title, label: Title, type: string, required: true }
+      - { name: date, label: Date, type: date, required: true }
+      - name: image
+        label: Image (optional)
+        type: image
+        options: { media: images }
+      - { name: body, label: Text, type: text, required: true }
+      - { name: link, label: External link (optional), type: string }
+
+  - name: home
+    label: Homepage text
+    type: file
+    path: src/content/pages/home.yaml
+    fields:
+      - { name: welcomeTitle, label: Welcome — small line above the headline, type: string, required: true }
+      - { name: welcomeHeadline, label: Welcome — big headline, type: string, required: true }
+      - { name: welcomeBody, label: Welcome — paragraphs, type: text, list: true, required: true }
+      - { name: researchTitle, label: Research section — heading, type: string, required: true }
+      - { name: researchCta, label: Research section — link text, type: string }
+      - { name: teamTitle, label: Team section — heading, type: string, required: true }
+      - { name: teamBody, label: Team section — paragraphs, type: text, list: true, required: true }
+      - name: teamImage
+        label: Team photo
+        type: image
+        required: true
+        options: { media: images }
+      - { name: teamCta, label: Team section — button text, type: string }
+      - { name: videoTitle, label: Video section — heading, type: string, required: true }
+      - name: videoId
+        label: YouTube video ID
+        type: string
+        required: true
+        description: 'The part after "v=" in the YouTube URL, e.g. 3j5pefRbTuE'
+      - { name: participateTitle, label: Participate section — heading, type: string, required: true }
+      - { name: participateBody, label: Participate section — text, type: text, required: true }
+      - { name: participateCta, label: Participate section — button text, type: string }

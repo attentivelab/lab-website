@@ -37,7 +37,7 @@ const topics = byOrder((await getCollection('research')).map((e) => e.data));
                 {String(i + 1).padStart(2, '0')} &middot; {topic.label ?? topic.title}
               </p>
               <h2 class="rrow__question">{topic.question ?? topic.title}</h2>
-              <p class="rrow__detail">{topic.detail ?? topic.body}</p>
+              <p class="rrow__detail">{topic.detail ?? topic.blurb}</p>
             </div>
           </article>
         </Reveal>
