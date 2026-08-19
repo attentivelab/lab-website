@@ -98,9 +98,28 @@ describe('publications page', () => {
   });
 });
 
+describe('participate page', () => {
+  it('shows hero, three studies with criteria, and the contact form', () => {
+    const page = readFileSync('dist/participate/index.html', 'utf8');
+    expect(page).toContain('Help us understand');
+    expect(page.match(/class="study"/g) ?? []).toHaveLength(3);
+    expect(page).toContain('Attention and object perception');
+    expect(page).toContain('Causal role of brain regions in attention');
+    expect(page).toContain('Virtual Reality');
+    expect((page.match(/Are you eligible\?/g) ?? [])).toHaveLength(3);
+    expect((page.match(/No metallic implant/g) ?? [])).toHaveLength(3);
+    expect((page.match(/href="#contact-form"/g) ?? [])).toHaveLength(3);
+    expect(page).toContain('id="contact-form"');
+    expect(page).toContain('name="email"');
+    expect(page).toContain('name="age"');
+    expect(page).toContain('name="study"');
+    expect(page).not.toContain('Learn more');
+  });
+});
+
 describe('navigation', () => {
   it('links all six destinations and they all build', () => {
-    for (const href of ['/research', '/lab-members', '/publications', '/news', '/collaborations', '/contact']) {
+    for (const href of ['/research', '/lab-members', '/publications', '/news', '/collaborations', '/participate']) {
       expect(home, `nav missing ${href}`).toContain(`href="${href}"`);
       expect(existsSync(`dist${href}/index.html`), `page missing ${href}`).toBe(true);
     }

@@ -15,6 +15,10 @@ JOBS = [
     ("Sani_et_al_2021.png", "hero-sani-2021", 1600, True),
     ("Lab_Picture.jpg", "lab-team", 1200, False),
     ("Featured_publication.png", "featured-publication", 1400, False),
+    ("Participate/main_Information.png", "participate-hero", 1200, False),
+    ("Participate/mri_study.png", "study-fmri", 900, False),
+    ("Participate/tms_study.png", "study-tms", 900, False),
+    ("Participate/vr_study.png", "study-vr", 900, False),
     # research area cards (flattened to RGB on white)
     ("Brain Injury & Attention.png", "research-injury", 900, False),
     ("Brain Network of Attention.png", "research-networks", 900, False),

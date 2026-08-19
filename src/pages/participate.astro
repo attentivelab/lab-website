@@ -1,0 +1,240 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Reveal from '../components/Reveal.astro';
+import { byOrder } from '../lib/collections';
+
+const studies = byOrder((await getCollection('studies')).map((e) => e.data));
+
+const CRITERIA = [
+  'Healthy adult, right-handed',
+  'Good vision (with or without correction)',
+  'Not to be pregnant',
+  'No metallic implant',
+];
+---
+
+<Base title="Participate — Attentive Brains & Behaviors Lab">
+  <section class="section phero">
+    <div class="wrap phero__grid">
+      <Reveal>
+        <div>
+          <p class="eyebrow">Participate in our research</p>
+          <h1 class="phero__title">Help us understand<br />how attention works</h1>
+          <p class="phero__body">
+            We are looking for volunteers to take part in studies on attention and the brain.
+            By participating, you can contribute directly to neuroscience research at the
+            University of Geneva.
+          </p>
+          <a class="btn btn--primary" href="#studies">View ongoing studies <span aria-hidden="true">&darr;</span></a>
+        </div>
+      </Reveal>
+      <Reveal delay={80}>
+        <img class="phero__img" src="/images/participate-hero.webp" alt="A participant performing an attention task" width="1200" height="900" fetchpriority="high" decoding="async" />
+      </Reveal>
+    </div>
+  </section>
+
+  <section class="section studies" id="studies">
+    <div class="wrap">
+      <Reveal>
+        <p class="eyebrow">Current opportunities</p>
+        <h2 class="section-title">Ongoing studies</h2>
+      </Reveal>
+
+      {studies.map((study, i) => (
+        <Reveal delay={i * 80}>
+          <article class="study">
+            <img class="study__img" src={study.image} alt="" width="900" height="640" loading="lazy" decoding="async" />
+            <div class="study__main">
+              <p class="study__tag">{study.tag}</p>
+              <h3 class="study__title">{study.title}</h3>
+              <p class="study__desc">{study.description}</p>
+              <ul class="study__meta">
+                <li>
+                  <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+                  {study.age}
+                </li>
+                <li>
+                  <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+                  {study.duration}
+                </li>
+                <li>
+                  <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+                  {study.location}
+                </li>
+                {study.compensated && (
+                  <li>
+                    <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                    Compensated
+                  </li>
+                )}
+              </ul>
+              <details class="study__eligible">
+                <summary>Are you eligible? <span aria-hidden="true">&darr;</span></summary>
+                <ul class="study__criteria">
+                  {CRITERIA.map((c) => <li>{c}</li>)}
+                </ul>
+              </details>
+            </div>
+            <a class="study__join" href="#contact-form">Participate <span aria-hidden="true">&rarr;</span></a>
+          </article>
+        </Reveal>
+      ))}
+    </div>
+  </section>
+
+  <section class="section section--form" id="contact-form">
+    <div class="wrap form-wrap">
+      <Reveal>
+        <p class="eyebrow">Interested in participating?</p>
+        <h2 class="section-title">Contact the research team</h2>
+        <form class="pform" novalidate>
+          <div class="pform__field">
+            <label for="pf-email">Email address</label>
+            <input id="pf-email" name="email" type="email" placeholder="you@example.com" required />
+          </div>
+          <div class="pform__field">
+            <label for="pf-age">Age</label>
+            <input id="pf-age" name="age" type="number" min="18" max="120" placeholder="18" required />
+          </div>
+          <div class="pform__field">
+            <label for="pf-study">Which study would you like to participate in?</label>
+            <select id="pf-study" name="study" required>
+              <option value="" selected disabled>Choose a study</option>
+              {studies.map((study) => <option value={study.title}>{study.title}</option>)}
+              <option value="any">Any study</option>
+            </select>
+          </div>
+          <button class="btn btn--primary pform__send" type="submit">Send</button>
+          <p class="pform__note" hidden>
+            The form is not active yet — please email
+            <a href="mailto:ilaria.sani@unige.ch">ilaria.sani@unige.ch</a> directly.
+          </p>
+        </form>
+      </Reveal>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* Hero */
+  .phero__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: center;
+  }
+  .phero__title { font-size: clamp(1.9rem, 1.3rem + 2.2vw, 3.1rem); margin-bottom: 1.1rem; }
+  .phero__body { color: var(--ink-soft); max-width: 46ch; margin-bottom: 1.75rem; }
+  .phero__img { width: 100%; height: auto; border-radius: var(--radius-lg); box-shadow: var(--shadow); }
+
+  /* Studies */
+  .studies { padding-top: 0; }
+  .study {
+    display: grid;
+    grid-template-columns: minmax(180px, 230px) 1fr auto;
+    gap: clamp(1.5rem, 3.5vw, 2.75rem);
+    align-items: center;
+    padding: clamp(1.25rem, 2.5vw, 1.75rem);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-lg);
+    margin-bottom: 1.5rem;
+    transition: box-shadow var(--transition), border-color var(--transition);
+  }
+  .study:hover { box-shadow: var(--shadow-lift); border-color: color-mix(in srgb, var(--brand) 55%, transparent); }
+  .study__img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; border-radius: var(--radius); }
+  .study__tag {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--brand-mid);
+    margin-bottom: 0.4rem;
+  }
+  .study__title { font-size: var(--text-lg); margin-bottom: 0.4rem; }
+  .study__desc { color: var(--ink-soft); font-size: var(--text-sm); max-width: 48ch; margin-bottom: 0.9rem; }
+  .study__meta {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.4rem;
+    font-size: var(--text-sm);
+    color: var(--ink-soft);
+    margin-bottom: 0.9rem;
+  }
+  .study__meta li { display: flex; align-items: center; gap: 0.45rem; }
+  .study__meta svg { color: var(--ink-faint); flex-shrink: 0; }
+  .study__eligible summary {
+    cursor: pointer;
+    font-size: var(--text-sm);
+    font-weight: 700;
+    color: var(--brand-mid);
+    list-style: none;
+    display: inline-flex;
+    gap: 0.35rem;
+    align-items: center;
+  }
+  .study__eligible summary::-webkit-details-marker { display: none; }
+  .study__eligible summary:hover { color: var(--brand-deep); }
+  .study__eligible[open] summary span { display: inline-block; transform: rotate(180deg); }
+  .study__criteria {
+    margin-top: 0.75rem;
+    padding-left: 1.2rem;
+    font-size: var(--text-sm);
+    color: var(--ink-soft);
+    line-height: 1.9;
+  }
+  .study__join {
+    font-size: var(--text-sm);
+    font-weight: 700;
+    color: var(--brand-mid);
+    text-decoration: none;
+    white-space: nowrap;
+    align-self: center;
+  }
+  .study__join:hover { color: var(--brand-deep); }
+
+  /* Form */
+  .section--form { background: linear-gradient(160deg, var(--brand-tint) 0%, var(--brand-soft) 100%); }
+  .form-wrap { max-width: 620px; }
+  .pform { display: grid; gap: 1.25rem; margin-top: 1.5rem; }
+  .pform__field { display: grid; gap: 0.4rem; }
+  .pform__field label { font-size: var(--text-sm); font-weight: 600; }
+  .pform__field input,
+  .pform__field select {
+    padding: 0.8rem 1rem;
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    transition: border-color var(--transition);
+  }
+  .pform__field input:focus,
+  .pform__field select:focus { outline: none; border-color: var(--brand-mid); }
+  .pform__send { justify-self: start; }
+  .pform__note { font-size: var(--text-sm); color: var(--ink-soft); }
+  .pform__note a { color: var(--brand-deep); }
+
+  @media (max-width: 880px) {
+    .phero__grid { grid-template-columns: 1fr; }
+    .study { grid-template-columns: 1fr; }
+    .study__img { max-width: 420px; }
+    .study__join { justify-self: start; }
+  }
+</style>
+
+<script>
+  // The form is intentionally not wired to a backend yet.
+  const form = document.querySelector('.pform');
+  if (form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const note = form.querySelector('.pform__note');
+      if (note) note.hidden = false;
+    });
+  }
+</script>

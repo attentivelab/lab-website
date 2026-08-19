@@ -57,6 +57,20 @@ export const newsSchema = z.object({
   link: z.string().optional(),
 });
 
+export const studySchema = z.object({
+  title: z.string().min(1),
+  tag: z.string().min(1),
+  description: z.string().min(1),
+  image: z.string().min(1),
+  age: z.string().min(1),
+  duration: z.string().min(1),
+  location: z.string().min(1),
+  compensated: z.boolean().default(true),
+  order: z.number(),
+});
+
+export type Study = z.infer<typeof studySchema>;
+
 export const homeSchema = z.object({
   welcomeTitle: z.string().min(1),
   welcomeHeadline: z.string().min(1),
