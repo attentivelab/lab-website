@@ -108,11 +108,11 @@ const hasEarlier = years.length > 3;
   .featured { margin-bottom: clamp(3rem, 7vw, 5rem); }
   .featured__grid {
     display: grid;
-    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: clamp(2rem, 5vw, 4rem);
     align-items: center;
   }
-  .featured__img { width: 100%; height: auto; border-radius: var(--radius-lg); }
+  .featured__img { width: 100%; max-width: 520px; height: auto; border-radius: var(--radius-lg); }
   .featured__year { color: var(--brand-mid); font-weight: 700; font-size: var(--text-sm); margin-bottom: 0.75rem; }
   .featured__heading { font-size: var(--text-xl); margin-bottom: 1rem; }
   .featured__authors { color: var(--ink-soft); margin-bottom: 0.75rem; }
@@ -149,12 +149,16 @@ const hasEarlier = years.length > 3;
     display: grid;
     grid-template-columns: minmax(90px, 140px) 1fr;
     gap: clamp(1.5rem, 4vw, 3.5rem);
-    margin-bottom: 1rem;
+    align-items: center;
+    padding-block: 1.5rem;
+    border-bottom: 1px solid var(--rule);
   }
+  .ygroup:last-of-type { border-bottom: 0; }
   .ygroup[hidden] { display: none; }
   .ygroup__year {
     font-size: var(--text-2xl);
     line-height: 1;
+    align-self: center;
   }
   .entry {
     display: grid;
@@ -164,7 +168,8 @@ const hasEarlier = years.length > 3;
     padding-block: 1.25rem;
     border-bottom: 1px solid var(--rule);
   }
-  .entry:last-child { border-bottom: 0; }
+  .entry:first-child { padding-top: 0; }
+  .entry:last-child { border-bottom: 0; padding-bottom: 0; }
   .entry__tags {
     font-size: 0.78rem;
     font-weight: 700;
