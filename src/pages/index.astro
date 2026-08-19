@@ -39,6 +39,18 @@ const home = (await getEntry('pages', 'home'))!.data;
     </div>
   </section>
 
+  <section class="section" id="video">
+    <div class="wrap">
+      <Reveal>
+        <p class="eyebrow">Watch</p>
+        <h2 class="section-title">{home.videoTitle}</h2>
+      </Reveal>
+      <Reveal delay={80}>
+        <VideoEmbed videoId={home.videoId} title={home.videoTitle} />
+      </Reveal>
+    </div>
+  </section>
+
   <section class="section" id="team">
     <div class="wrap">
       <Reveal>
@@ -53,18 +65,6 @@ const home = (await getEntry('pages', 'home'))!.data;
         >
           {home.teamBody.map((p) => <p>{p}</p>)}
         </SplitBlock>
-      </Reveal>
-    </div>
-  </section>
-
-  <section class="section" id="video">
-    <div class="wrap">
-      <Reveal>
-        <p class="eyebrow">Watch</p>
-        <h2 class="section-title">{home.videoTitle}</h2>
-      </Reveal>
-      <Reveal delay={80}>
-        <VideoEmbed videoId={home.videoId} title={home.videoTitle} />
       </Reveal>
     </div>
   </section>
