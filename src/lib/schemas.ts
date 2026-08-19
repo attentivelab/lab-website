@@ -62,6 +62,16 @@ export const newsSchema = z.object({
   link: z.string().optional(),
 });
 
+export const collaboratorSchema = z.object({
+  name: z.string().min(1),
+  affiliation: z.string().min(1),
+  photo: z.string().min(1),
+  link: z.string().optional(),
+  order: z.number(),
+});
+
+export type Collaborator = z.infer<typeof collaboratorSchema>;
+
 export const studySchema = z.object({
   title: z.string().min(1),
   tag: z.string().min(1),

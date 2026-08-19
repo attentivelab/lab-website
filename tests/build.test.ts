@@ -139,6 +139,23 @@ describe('research page', () => {
   });
 });
 
+describe('collaborations page', () => {
+  it('shows all six collaborators in order with affiliations', () => {
+    const page = readFileSync('dist/collaborations/index.html', 'utf8');
+    const names = ['Franco Pestilli', 'Patrik Vuilleumier', 'Roberta Ronchi', 'Winrich Freiwald', 'Michael Schmid', 'Sébastien Ballesta'];
+    let pos = -1;
+    for (const name of names) {
+      const idx = page.indexOf(name);
+      expect(idx, `missing or out of order: ${name}`).toBeGreaterThan(pos);
+      pos = idx;
+    }
+    expect(page).toContain('University of Texas at Austin');
+    expect(page).toContain('HUG');
+    expect(page.match(/class="collab"/g) ?? []).toHaveLength(6);
+    expect(page).not.toContain('coming soon');
+  });
+});
+
 describe('navigation', () => {
   it('links all six destinations and they all build', () => {
     for (const href of ['/research', '/lab-members', '/publications', '/news', '/collaborations', '/participate']) {

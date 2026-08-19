@@ -1,15 +1,67 @@
 ---
+import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
-const heading = 'Collaborations';
+import Reveal from '../components/Reveal.astro';
+import { byOrder } from '../lib/collections';
+
+const collaborators = byOrder((await getCollection('collaborators')).map((e) => e.data));
 ---
-<Base title={`${heading} — Attentive Brains & Behaviors Lab`}>
-  <section class="section">
+
+<Base title="Collaborations — Attentive Brains & Behaviors Lab">
+  <section class="section collabs">
     <div class="wrap">
-      <h1 class="section-title">{heading}</h1>
-      <p style="color: var(--ink-soft); max-width: 60ch;">
-        This page is coming soon. In the meantime, see the research questions on the
-        <a href="/#research" style="color: var(--brand-deep); font-weight: 600;">home page</a>.
-      </p>
+      <Reveal>
+        <h1 class="collabs__title">Collaborations</h1>
+        <p class="collabs__sub">
+          Our research is enriched by close collaborations<br />with laboratories around the world.
+        </p>
+      </Reveal>
+
+      <div class="collabs__row">
+        {collaborators.map((person, i) => (
+          <Reveal delay={i * 70}>
+            <article class="collab">
+              <img
+                class="collab__photo"
+                src={person.photo}
+                alt={person.name}
+                width="500"
+                height="625"
+                loading="lazy"
+                decoding="async"
+              />
+              <h2 class="collab__name">{person.name}</h2>
+              <p class="collab__affiliation">{person.affiliation}</p>
+            </article>
+          </Reveal>
+        ))}
+      </div>
     </div>
   </section>
 </Base>
+
+<style>
+  .collabs__title { font-size: var(--text-2xl); margin-bottom: 0.75rem; }
+  .collabs__sub { color: var(--ink-soft); margin-bottom: 3rem; }
+
+  /* one line on desktop, wrapping gracefully below */
+  .collabs__row {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: clamp(1rem, 2vw, 1.75rem);
+  }
+  .collab { text-align: center; }
+  .collab__photo {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    border-radius: var(--radius);
+    margin-bottom: 0.9rem;
+    box-shadow: var(--shadow);
+  }
+  .collab__name { font-size: var(--text-base); font-weight: 800; margin-bottom: 0.15rem; }
+  .collab__affiliation { color: var(--brand-mid); font-size: 0.82rem; font-weight: 700; line-height: 1.4; }
+
+  @media (max-width: 1000px) { .collabs__row { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (max-width: 560px) { .collabs__row { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+</style>

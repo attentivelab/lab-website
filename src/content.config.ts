@@ -1,7 +1,7 @@
 import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
 import {
-  heroSchema, researchSchema, personSchema, publicationSchema, newsSchema, homeSchema, studySchema,
+  heroSchema, researchSchema, personSchema, publicationSchema, newsSchema, homeSchema, studySchema, collaboratorSchema,
 } from './lib/schemas';
 
 const md = (dir: string) => glob({ pattern: '**/*.md', base: `./src/content/${dir}` });
@@ -12,9 +12,10 @@ const people = defineCollection({ loader: md('people'), schema: personSchema });
 const publications = defineCollection({ loader: md('publications'), schema: publicationSchema });
 const news = defineCollection({ loader: md('news'), schema: newsSchema });
 const studies = defineCollection({ loader: md('studies'), schema: studySchema });
+const collaborators = defineCollection({ loader: md('collaborators'), schema: collaboratorSchema });
 const pages = defineCollection({
   loader: glob({ pattern: '**/*.yaml', base: './src/content/pages' }),
   schema: homeSchema,
 });
 
-export const collections = { hero, research, people, publications, news, studies, pages };
+export const collections = { hero, research, people, publications, news, studies, collaborators, pages };

@@ -73,8 +73,18 @@ MEMBERS = [
 ]
 
 
-def convert_member(src_name, slug, rotate_cw=0):
-    src = SRC / "lab_members" / src_name
+COLLABORATORS = [
+    ("franco-pestilli.png", "franco-pestilli"),
+    ("Patrik_Vuilleumier.jpg", "patrik-vuilleumier"),
+    ("Roberta_Ronchi.jpg", "roberta-ronchi"),
+    ("Winrich_Freiwald.jpg", "winrich-freiwald"),
+    ("Micheal_Schmid.jpg", "michael-schmid"),
+    ("Sebastien_Ballesta.jpg", "sebastien-ballesta"),
+]
+
+
+def convert_member(src_name, slug, rotate_cw=0, folder="lab_members", prefix="people"):
+    src = SRC / folder / src_name
     if not src.exists():
         raise SystemExit(f"missing member photo: {src}")
     if src.suffix.lower() == ".heic":
@@ -94,7 +104,7 @@ def convert_member(src_name, slug, rotate_cw=0):
     if im.width > 1000:
         h = round(im.height * 1000 / im.width)
         im = im.resize((1000, h), Image.LANCZOS)
-    dest = OUT / f"people-{slug}.webp"
+    dest = OUT / f"{prefix}-{slug}.webp"
     im.save(dest, "WEBP", quality=95, method=6)
     if tmp_path:
         tmp_path.unlink(missing_ok=True)
@@ -107,6 +117,8 @@ def main():
         convert(*job)
     for member in MEMBERS:
         convert_member(*member)
+    for collab in COLLABORATORS:
+        convert_member(*collab, folder="Collaborators", prefix="collab")
     unige = SRC / "Logo_UNIGE.webp"
     if unige.exists():
         (OUT / "logo-unige.webp").write_bytes(unige.read_bytes())
