@@ -56,6 +56,10 @@ To stop recruiting for a study, delete its entry.
 
 - **Images**: photos of people look best in portrait orientation; paper figures and
   study images in landscape. Anything reasonable works — the site crops sensibly.
+- **"Failed to upload file: 413"** means the image is too big (limit ≈ 3 MB —
+  photos straight from a phone often exceed it). Shrink it first: open the photo
+  in Preview → File → Export → lower the quality slider → save, then upload that.
+  PDFs of papers are rarely affected.
 - **Saving is publishing.** Every save updates the live site (~1 minute).
 - **Nothing is ever lost.** Every change is recorded; any mistake can be rolled back —
   ask, and any version can be restored.
