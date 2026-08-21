@@ -1,7 +1,7 @@
 ---
 name: Eugénie Cataldo
 role: PhD Student
-photo: /images/Eugénie_Catlado-1.jpg
+photo: /images/people-eugenie-cataldo.webp
 order: 1
 alumni: false
 ---

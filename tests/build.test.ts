@@ -84,7 +84,7 @@ describe('lab members page', () => {
     for (const name of ['Prosper Fiave', 'Krystina Wieczerzak', 'Simona Vaitekunaite', 'Thibaud Delavy', 'Tristan Nukman', 'Carling Massel']) {
       expect(page, `missing member: ${name}`).toContain(name);
     }
-    expect(page.match(/class="person"/g) ?? []).toHaveLength(7);
+    expect(page.match(/class="person"/g) ?? []).toHaveLength(8);
     expect(page).not.toContain('Alumni');
   });
 });
