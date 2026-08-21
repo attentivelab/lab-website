@@ -102,7 +102,7 @@ content:
         label: Photo
         type: image
         options: { media: images }
-        description: 'Portrait orientation looks best (it is displayed 4:5).'
+        description: 'Portrait orientation looks best (it is displayed 4:5). Upload a .jpg — .png photos are often too large and fail with error 413.'
       - { name: bio, label: Short line under the name (optional), type: string }
       - { name: email, label: Email (optional), type: string }
       - name: links
