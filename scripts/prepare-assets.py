@@ -70,6 +70,7 @@ MEMBERS = [
     ("Thibaud_Delavy.jpg", "thibaud-delavy"),
     ("Tristan_Nukman.HEIC", "tristan-nukman", 90),  # EXIF orientation lost via PNG intermediate
     ("Carling.heic", "carling-massel"),
+    ("Eugénie_Catlado.png", "eugenie-cataldo"),
 ]
 
 
